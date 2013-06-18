@@ -124,6 +124,8 @@ public class PlayerStates : MonoBehaviour {
 					//Display screen to retry or quit game
 					Debug.Log ("Current State: " + currentState.ToString());
 					break;
+					// Oh noes! You killed him again! 
+					
 				default:
 					Debug.Log ("Error! Invalid State!");
 					//Load Retry/EndGame Menu options
