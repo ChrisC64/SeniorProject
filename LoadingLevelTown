@@ -1,0 +1,18 @@
+using UnityEngine;
+using System.Collections;
+
+public class LoadingLevelTown : MonoBehaviour {
+
+    public GUIText level1message;
+
+  // Use this for initialization
+	void Start () {
+	level1message.SendMessage("startingLevelMessage", "level 1. town");
+	}
+	
+	// Update is called once per frame
+    void Update()
+    {
+  
+    }
+}
