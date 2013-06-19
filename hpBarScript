@@ -15,12 +15,7 @@ using UnityEngine;
 using System.Collections;
 
 public class hpBarScript : MonoBehaviour {
-//  public GUIStyle hp_status;
-//	public GUIStyle hp_full;
-//	public float barDisplay;
-	
-//	Vector2 pos = new Vector2(10,50);
-//	Vector2 size = new Vector2(250,50);
+
 	
 	private PlayerStates playerStates;
 	// current and max Hp set at a float value of 300
