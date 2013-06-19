@@ -1,0 +1,17 @@
+using UnityEngine;
+using System.Collections;
+
+public class StartingLevelRuins: MonoBehaviour
+{
+    public GUIText level3Ruins;
+
+  // Use this for initialization
+	void Start () {
+        level3Ruins.SendMessage("startingLevelMessage", "Level 3. Ruins");
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
