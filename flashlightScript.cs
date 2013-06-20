@@ -8,33 +8,17 @@ using System.Collections;
 
 public class flashlightScript : MonoBehaviour 
 {
-
-
-  public GameObject flashlight;
-	
-	
-	
+  public GameObject flashlight;	
 	// Use this for initialization
 	void Start () 
 	{
-//		renderer.enabled = false;
-		
-	
-		//flashlight.SetActive(false);
-	
-		
-		flashlight.renderer.enabled = false;
-		
-		
-		
-		
-		
-	}
-	
+//		renderer.enabled = false;			
+		//flashlight.SetActive(false);		
+		flashlight.renderer.enabled = false;		
+	}	
 	// Update is called once per frame
 	void Update () 
-	{
-		
+	{		
 		if(Input.GetKeyDown("1") && flashlight.renderer.enabled == false)
 		{
 //			renderer.enabled = true;
@@ -46,21 +30,18 @@ public class flashlightScript : MonoBehaviour
 //			inventoryScript equippedItem = gameObject.GetComponent<inventoryScript>();
 //			equippedItem.
 			
-//			equippedItem = flashlight;
-			
+//			equippedItem = flashlight;			
 		}
 		else if(Input.GetKeyDown("1") && flashlight.renderer.enabled == true)
 		{
 			Debug.Log ("Flashlight Disappeared!");
 			
 			flashlight.renderer.enabled = false;
-			//flashlight.SetActive(false);
-			
+			//flashlight.SetActive(false);			
 		}
 //		if(equippedItem!=flashlight)
 //		{
 //			renderer.enabled = false;
-//		}
-	
+//		}	
 	}
 }
