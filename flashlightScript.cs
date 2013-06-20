@@ -12,26 +12,30 @@ using System.Collections;
 public class flashlightScript : MonoBehaviour 
 {
 	public GameObject flashlight;
+	public PlayerStates player;
+	
+
 
 	// Use this for initialization
 	void Start () 
 	{
+		player = GameObject.FindWithTag("Player").GetComponent<PlayerStates>();
 		flashlight.renderer.enabled = false;
 	} // End Start
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if(Input.GetKeyDown("1") && flashlight.renderer.enabled == false)
+		if(player.getFlashlight() == true)
 		{
 			Debug.Log ("I haz flashlight");	
 			flashlight.renderer.enabled = true;
 		}
-		else if(Input.GetKeyDown("1") && flashlight.renderer.enabled == true)
+		else if(player.getFlashlight() == false)
 		{
 			Debug.Log ("Flashlight Disappeared!");			
 			flashlight.renderer.enabled = false;		
 		}// End Update	
 	}
+	//make true and show item - Message from Item manager
 }
-
