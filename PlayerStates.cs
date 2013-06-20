@@ -34,6 +34,10 @@ public class PlayerStates : MonoBehaviour {
 	protected float f_currentHP;
 	private bool b_IsAlive;
 	private bool b_InMenu;
+	private bool b_Flashlight;
+	private bool b_Canteen;
+	private bool b_SunGem;
+	private bool b_MoonGem;
 	
 	//Uses left for Canteen item
 	public int i_MaxUse; 
@@ -100,16 +104,36 @@ public class PlayerStates : MonoBehaviour {
 						{currentState = PlayerEnum.DEAD;}
 					}
 					if(Input.GetKeyDown ("1")) {
-						//set equipped item to flashlight
+						//set equipped item to flashlight to true
+						b_Flashlight = true;
+						b_Canteen = false;
+						b_SunGem = false;
+						b_MoonGem = false;
+						Debug.Log ("Equipped Flashlight");
 					}
 					if(Input.GetKeyDown ("2")) {
 						//set equipped item to canteen
+						b_Flashlight = false;
+						b_Canteen = true;
+						b_SunGem = false;
+						b_MoonGem = false;
+						Debug.Log ("Equipped Canteen");
 					}
 					if(Input.GetKeyDown("3")) {
 						//set equipped item to sun gemstone
+						b_Flashlight = false;
+						b_Canteen = false;
+						b_SunGem = true;
+						b_MoonGem = false;
+						Debug.Log ("Equipped Sun Gem");
 					}
 					if(Input.GetKeyDown("4")) {
 						//set equipped item to moon gemstone
+						b_Flashlight = false;
+						b_Canteen = false;
+						b_SunGem = false;
+						b_MoonGem = true;
+						Debug.Log ("Equipped Moon Gem");
 					}
 						//Display GUI HUD for Gameplay
 						//Hide and Lock mouse (display cursor for game)
@@ -156,6 +180,10 @@ public class PlayerStates : MonoBehaviour {
 	//return methods used for our GameState Manager to retrieve when needed
 	public bool getIsAlive() {return b_IsAlive;}
 	public bool getInMenu() {return b_InMenu;}
+	public bool getFlashlight() {return b_Flashlight;}
+	public bool getCanteen() {return b_Canteen;}
+	public bool getSunGem() {return b_SunGem;}
+	public bool getMoonGem() {return b_MoonGem;}
 	public float getMaxHP() {return f_MaxHP;}
 	public float getCurrHP() {return f_currentHP;}
 	
