@@ -17,7 +17,7 @@ using UnityEngine;
 using System.Collections;
 
 public class PlayerStates : MonoBehaviour {
-  
+	
 	/****************************
 	 * BEGIN VARIABLE DECLARATION
 	 * ***************************/
@@ -39,6 +39,7 @@ public class PlayerStates : MonoBehaviour {
 	public int i_MaxUse; 
 	public int i_CurrUse;
 	public float f_HealAmount;
+	private float posX, posY, posZ;
 	
 	// Class objects
 	public hpBarScript hpHUD;
@@ -48,7 +49,7 @@ public class PlayerStates : MonoBehaviour {
 	public PlayerStates() {
 		//Player variables
 		f_MaxHP = 100.0f;
-		f_currentHP = 100.0f;
+		f_currentHP = f_MaxHP;
 		b_IsAlive = true;
 		b_InMenu = false;
 		
@@ -56,22 +57,20 @@ public class PlayerStates : MonoBehaviour {
 		i_MaxUse = 4; 
 		i_CurrUse = 4;
 		f_HealAmount = 50.0f;
+		
 	}
 	
 	void Awake() {
 		//Get State
 		currentState = PlayerEnum.GAME;
-		
-		//Get Components
-		//hpHUD = gameObject.AddComponent<hpBarScript>();
+
 	}
 	
 	// Use this for initialization
 	void Start () {
-		//Set Values for Player
-		//f_currentHP = 100.0f;
 		b_IsAlive = true;
 		b_InMenu = false;
+		
 	}
 	/***************************
 	 * END VARAIBLE DECLARATION
@@ -81,6 +80,7 @@ public class PlayerStates : MonoBehaviour {
 	void Update () {
 			switch(currentState) {
 				case(PlayerEnum.GAME): // GAME State
+			#region GAME
 					Debug.Log ("currentState: " + currentState.ToString());
 					//mouse.SendMessage("LockMouse");
 					//Player Input when playing game
@@ -99,16 +99,32 @@ public class PlayerStates : MonoBehaviour {
 						if(f_currentHP <= 0)
 						{currentState = PlayerEnum.DEAD;}
 					}
+					if(Input.GetKeyDown ("1")) {
+						//set equipped item to flashlight
+					}
+					if(Input.GetKeyDown ("2")) {
+						//set equipped item to canteen
+					}
+					if(Input.GetKeyDown("3")) {
+						//set equipped item to sun gemstone
+					}
+					if(Input.GetKeyDown("4")) {
+						//set equipped item to moon gemstone
+					}
 						//Display GUI HUD for Gameplay
 						//Hide and Lock mouse (display cursor for game)
+			#endregion GAME
 						break;
 				case(PlayerEnum.MENU): // MENU State
+			#region MENU
 					Debug.Log ("currentState: " + currentState.ToString ());
 					//Unlock mouse
 					//Display Menu
 					//Player Input for Menu controls
+			#endregion MENU
 					break;
 				case(PlayerEnum.MAP): // MAP State
+			#region MAP
 					Debug.Log ("currentState: " + currentState.ToString ());
 					//Unlock Mouse
 					//mouse.SendMessage("UnlockMouse");
@@ -119,16 +135,20 @@ public class PlayerStates : MonoBehaviour {
 						currentState = PlayerEnum.GAME;
 					}
 					//If TAB is hit, return to Game and hide Map Overlay
+			#endregion MAP
 					break;
 				case(PlayerEnum.DEAD):
+			#region DEAD
 					//Display screen to retry or quit game
+					b_IsAlive = false;
 					Debug.Log ("Current State: " + currentState.ToString());
+			#endregion DEAD
 					break;
-					// Oh noes! You killed him again! 
-					
 				default:
+			#region DEFAULT
 					Debug.Log ("Error! Invalid State!");
 					//Load Retry/EndGame Menu options
+			#endregion DEFAULT
 					break;
 			} // End of Switch
 	} // End of Update
