@@ -7,6 +7,7 @@ var stage:int = 1;
 
 //For actual doors
 var doorOpen:boolean = true;
+var blockingObject : GameObject;
 
 function Awake()
 {
@@ -65,6 +66,10 @@ function Update()
 		testForCells=false;
 	}	
 	waitToTestCells--;
+	
+	//Updates doorOpen with the blocking game object
+	if(blockingObject != null)
+		doorOpen = blockingObject.GetComponent(DoorScriptExample).isOpen;
 }
 
 function OnTriggerEnter(other : Collider)
