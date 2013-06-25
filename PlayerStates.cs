@@ -34,16 +34,17 @@ public class PlayerStates : MonoBehaviour {
 	protected float f_currentHP;
 	private bool b_IsAlive;
 	private bool b_InMenu;
-	private bool b_Flashlight;
-	private bool b_Canteen;
-	private bool b_SunGem;
-	private bool b_MoonGem;
 	
 	//Uses left for Canteen item
 	public int i_MaxUse; 
 	public int i_CurrUse;
 	public float f_HealAmount;
-	private float posX, posY, posZ;
+	
+	//Weapon booleans
+	public bool b_Flashlight;
+	public bool b_Canteen;
+	public bool b_SunGem;
+	public bool b_MoonGem;
 	
 	// Class objects
 	public hpBarScript hpHUD;
@@ -61,6 +62,11 @@ public class PlayerStates : MonoBehaviour {
 		i_MaxUse = 4; 
 		i_CurrUse = 4;
 		f_HealAmount = 50.0f;
+		//set equipped item to flashlight to true
+		b_Flashlight = true;
+		b_Canteen = false;
+		b_SunGem = false;
+		b_MoonGem = false;
 		
 	}
 	
@@ -85,56 +91,11 @@ public class PlayerStates : MonoBehaviour {
 			switch(currentState) {
 				case(PlayerEnum.GAME): // GAME State
 			#region GAME
+					if(f_currentHP <= 0)
+						{currentState = PlayerEnum.DEAD;}
 					Debug.Log ("currentState: " + currentState.ToString());
 					//mouse.SendMessage("LockMouse");
-					//Player Input when playing game
-					if(Input.GetButtonDown("Map")) {
-						Debug.Log("Opening Map");
-						currentState = PlayerEnum.MAP; // Open map
-					}
-					if(Input.GetKeyDown("h") && f_currentHP < f_MaxHP) {
-						heal ();
-						Debug.Log ("Player's Current HP: " + f_currentHP);
-					}
-					if(Input.GetKeyDown ("j") && f_currentHP >= 0) {
-						takeDamage(10);
-						Debug.Log ("Player's Current HP: " + f_currentHP);
-						//If player's health is 0, switch states
-						if(f_currentHP <= 0)
-						{currentState = PlayerEnum.DEAD;}
-					}
-					if(Input.GetKeyDown ("1")) {
-						//set equipped item to flashlight to true
-						b_Flashlight = true;
-						b_Canteen = false;
-						b_SunGem = false;
-						b_MoonGem = false;
-						Debug.Log ("Equipped Flashlight");
-					}
-					if(Input.GetKeyDown ("2")) {
-						//set equipped item to canteen
-						b_Flashlight = false;
-						b_Canteen = true;
-						b_SunGem = false;
-						b_MoonGem = false;
-						Debug.Log ("Equipped Canteen");
-					}
-					if(Input.GetKeyDown("3")) {
-						//set equipped item to sun gemstone
-						b_Flashlight = false;
-						b_Canteen = false;
-						b_SunGem = true;
-						b_MoonGem = false;
-						Debug.Log ("Equipped Sun Gem");
-					}
-					if(Input.GetKeyDown("4")) {
-						//set equipped item to moon gemstone
-						b_Flashlight = false;
-						b_Canteen = false;
-						b_SunGem = false;
-						b_MoonGem = true;
-						Debug.Log ("Equipped Moon Gem");
-					}
+					playerInput();
 						//Display GUI HUD for Gameplay
 						//Hide and Lock mouse (display cursor for game)
 			#endregion GAME
@@ -196,4 +157,53 @@ public class PlayerStates : MonoBehaviour {
 	public void takeDamage(float damage) {f_currentHP = f_currentHP - damage;}
 	public float heal() {return f_currentHP += f_currentHP + 50.0f > f_MaxHP ? 
 		f_HealAmount = f_MaxHP - f_currentHP : (f_HealAmount < 50.0f ? f_HealAmount = 50.0f : f_HealAmount = 50.0f);}
+	
+	private void playerInput() {
+		//Player Input when playing game
+					if(Input.GetButtonDown("Map")) {
+						Debug.Log("Opening Map");
+						currentState = PlayerEnum.MAP; // Open map
+					}
+					if(Input.GetKeyDown("h") && f_currentHP < f_MaxHP) {
+						heal ();
+						Debug.Log ("Player's Current HP: " + f_currentHP);
+					}
+					if(Input.GetKeyDown ("j") && f_currentHP >= 0) {
+						takeDamage(10);
+						Debug.Log ("Player's Current HP: " + f_currentHP);
+						//If player's health is 0, switch states
+					}
+					if(Input.GetKeyDown ("1")) {
+						//set equipped item to flashlight to true
+						b_Flashlight = true;
+						b_Canteen = false;
+						b_SunGem = false;
+						b_MoonGem = false;
+						Debug.Log ("Equipped Flashlight");
+					}
+					if(Input.GetKeyDown ("2")) {
+						//set equipped item to canteen
+						b_Flashlight = false;
+						b_Canteen = true;
+						b_SunGem = false;
+						b_MoonGem = false;
+						Debug.Log ("Equipped Canteen");
+					}
+					if(Input.GetKeyDown("3")) {
+						//set equipped item to sun gemstone
+						b_Flashlight = false;
+						b_Canteen = false;
+						b_SunGem = true;
+						b_MoonGem = false;
+						Debug.Log ("Equipped Sun Gem");
+					}
+					if(Input.GetKeyDown("4")) {
+						//set equipped item to moon gemstone
+						b_Flashlight = false;
+						b_Canteen = false;
+						b_SunGem = false;
+						b_MoonGem = true;
+						Debug.Log ("Equipped Moon Gem");
+					}
+	}
 }
