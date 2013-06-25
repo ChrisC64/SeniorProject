@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 public class Switch : MonoBehaviour {
-  private bool bIsSwitchedOn = false;
+	private bool bIsSwitchedOn = true;
 	public float targetTime = 2.0f;
 	public List<GameObject> connectedObjects = new List<GameObject>();
 	
@@ -27,7 +27,8 @@ public class Switch : MonoBehaviour {
 			int count = 0;
 			foreach(GameObject objects in connectedObjects)
 			{
-				connectedObjects[count].gameObject.renderer.material.color = Color.red;
+				connectedObjects[count].renderer.enabled = false;
+				connectedObjects[count].collider.enabled = false;
 				count++;
 			}
 		}//Else if the switch if false AND the time passed is greater than targetTime, switch On
@@ -39,9 +40,20 @@ public class Switch : MonoBehaviour {
 			int count = 0;
 			foreach(GameObject objects in connectedObjects)
 			{
-				connectedObjects[count].gameObject.renderer.material.color = Color.green;
+				connectedObjects[count].renderer.enabled = true;
+				connectedObjects[count].collider.enabled = true;
 				count++;
 			}
 		}
 	} // End TriggerSwitch
+	
+	void Activate() { 
+		Debug.Log("Watch Out Traps!");
+		int count = 0; 
+		foreach(GameObject objects in connectedObjects)
+		{
+			connectedObjects[count].SendMessage("Toggle");
+			count++;
+		}
+	}
 }
