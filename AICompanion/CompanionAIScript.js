@@ -32,8 +32,8 @@ var waitToStart : int = 5;
 function Awake()
 {
 	shortestPathSoFar = Mathf.Infinity;
-	playerMovementScript = GameObject.FindWithTag("Player").GetComponent(PlayerMovementScript);
-	playerTransform = GameObject.FindWithTag("Player").transform;
+	playerMovementScript = GameObject.FindWithTag("PlayerPosition").GetComponent(PlayerMovementScript);
+	playerTransform = GameObject.FindWithTag("PlayerPosition").transform;
 	waitToStart = 5;
 	v3RandomizedCourse = transform.position;
 	fIdleTimer = 10.0f;
@@ -266,7 +266,7 @@ function GoForPlayer()
 function GoForDoor()
 {
 	Debug.Log("Going for Door");
-	transform.position += (goalDoor.transform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;
+	transform.position += (goalDoor.transform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;	
 	FaceDirection(true);
 	//Reset idle timer
 	fIdleTimer = 10.0f;
