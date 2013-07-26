@@ -12,7 +12,7 @@ public class DarkGem : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		f_RayLength = 5.0f;
-		b_IsOn = true;
+		b_IsOn = false;
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerStates>();
 	}
 	
@@ -21,37 +21,20 @@ public class DarkGem : MonoBehaviour {
 		if(player.getMoonGem() == true)
 		{
 			moonGem.renderer.enabled = true;
-			if(Input.GetKeyDown(KeyCode.Mouse1)) {
-				if(b_IsOn) {
-					b_IsOn = false;
-				} else if(!b_IsOn) {
-					b_IsOn = true;
-				}
-				Debug.Log("Moon b_IsOn: " + b_IsOn);
-			} // End Input block
+			b_IsOn = true;
 			//check if the light is on
-			if(b_IsOn) {
-				Debug.DrawRay (transform.position, Camera.mainCamera.transform.TransformDirection(Vector3.forward) * f_RayLength);
-				//turn on light
-				
-				//If Object collides with other object that is lightObject, send message
-				if(Physics.Raycast(transform.position, Camera.mainCamera.transform.TransformDirection(Vector3.forward), out hitInfo, f_RayLength)) {
-					//f_Distance = hitInfo.distance;	
-					if(hitInfo.collider.gameObject.tag == "LightObject") {
-						//send a message to switch states
-						lightObject = hitInfo.collider.gameObject;
-						lightObject.SendMessage("ActivateDark");
-						Debug.Log ("Dark Gem object....");
-					}// End IF block
-				} // End Raycast
-			}
-			else if(!b_IsOn){
-				//turn off light
-			}
+			Debug.DrawRay (transform.position, Camera.mainCamera.transform.TransformDirection(Vector3.forward) * f_RayLength);
+			//If Object collides with other object that is lightObject, send message
+			if(Physics.Raycast(transform.position, Camera.mainCamera.transform.TransformDirection(Vector3.forward), out hitInfo, f_RayLength)) {
+				if(hitInfo.collider.gameObject.tag == "LightObject") {
+					//send a message to switch states
+					lightObject = hitInfo.collider.gameObject;
+					lightObject.SendMessage("ActivateDark");
+				}// End IF block
+			} // End Raycast
 		}//End player.getMoonGem
-		else if(player.getMoonGem() == false)
-		{
-			moonGem.renderer.enabled = false;	
+		else if(player.getMoonGem() == false) {
+			moonGem.renderer.enabled = false;
 		}
 	}// End Update
 	public bool GetIsOn() {return b_IsOn;}
