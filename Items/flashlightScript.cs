@@ -13,9 +13,6 @@ public class flashlightScript : MonoBehaviour
 {
 	public GameObject flashlight;
 	public PlayerStates player;
-	
-
-
 	// Use this for initialization
 	void Start () 
 	{
@@ -26,16 +23,12 @@ public class flashlightScript : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if(player.getFlashlight() == true)
-		{
-			Debug.Log ("I haz flashlight");	
+		if(player.getFlashlight() == true) {	
 			flashlight.renderer.enabled = true;
 		}
-		else if(player.getFlashlight() == false)
-		{
-			Debug.Log ("Flashlight Disappeared!");			
-			flashlight.renderer.enabled = false;		
-		}// End Update	
+		else if(player.getFlashlight() == false) {		
+			flashlight.renderer.enabled = false;
+		}// End Update
 	}
 	//make true and show item - Message from Item manager
 }
