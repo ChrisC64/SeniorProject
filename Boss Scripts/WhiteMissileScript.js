@@ -12,7 +12,6 @@ var damage : int = 10;
 function Start () 
 {
 	playerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform; 
-	transform.LookAt(transform.position+Vector3(0,1,0));
 }
 
 function Update () 
@@ -34,14 +33,27 @@ function Update ()
 	if(distance < 1)
 	{
 		GameObject.FindGameObjectWithTag("Player").SendMessage("takeDamage", damage, SendMessageOptions.DontRequireReceiver);
+		GameObject.FindGameObjectWithTag("Boss").SendMessage("SubtractSpirit", SendMessageOptions.DontRequireReceiver);
 		Destroy(gameObject); 
 	}
 }
 
+function RandomRise()
+{
+	transform.LookAt(transform.position+Vector3(Random.Range(-2,2),1,Random.Range(-2,2)));
+}
+
 function ActivateLight()
 {	
+	GameObject.FindGameObjectWithTag("Boss").SendMessage("SubtractSpirit", SendMessageOptions.DontRequireReceiver);
 	Destroy(gameObject);
 }
+
+function ActivateDark()
+{
+	
+}
+
 
 //function OnTriggerEnter(other : Collider)
 //{
