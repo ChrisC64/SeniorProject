@@ -34,11 +34,14 @@ function Update () {
 	 
 	//These make the model mesh follow the parent with a slight delay for realism.
 	transform.position.x = Mathf.SmoothDamp(transform.position.x, tParentToFollow.position.x, fVelocityX, fMoveDamp); 
-	transform.position.z = Mathf.SmoothDamp(transform.position.z, tParentToFollow.position.z, fVelocityZ, fMoveDamp); 
+	transform.position.z = Mathf.SmoothDamp(transform.position.z, tParentToFollow.position.z, fVelocityZ, fMoveDamp);
+	//transform.position.y = tParentToFollow.GetComponent(CompanionAIScript).transform.position.y; 
 	 
 	//This rotates the mesh to follow the parent's rotation with a slight lag for realism.
 	transform.rotation = Quaternion.Lerp(transform.rotation, tParentToFollow.rotation, fRotationSpeed*Time.deltaTime);
-	//transform.rotation.y = 0.0f; 
+	
+	//This keeps the body from tilting when going up on angles. 
+	transform.rotation.x = 0.0f;
 	
 		
 	////////////////////////////////////////////////
@@ -50,14 +53,14 @@ function Update () {
 	
 	//Set the ray above the companion body and shoot the ray down. 
 	//100 is an estimate of the body's height, need to be somewhere in the head
-	hits = Physics.RaycastAll(Ray(transform.position + Vector3(0, 100, 0), Vector3.up * -1));
+	hits = Physics.RaycastAll(Ray(transform.position + Vector3(0, 10, 0), Vector3.up * -1));
 	
 	for(var i:int=0; i<hits.Length; i++)
 	{
 		var hit : RaycastHit = hits[i];
 		if(hit.transform.gameObject == tParentToFollow.gameObject.GetComponent(CompanionAIScript).currentCell)
 		{
-			transform.position.y = hit.point.y;	
+			transform.position.y = hit.point.y+2.4f;	
 		}
 	}
 }

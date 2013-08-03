@@ -3,6 +3,7 @@
 var doors = new Array();
 var torches = new Array();
 var bTorches : boolean = false;
+var wait : boolean = false;
 
 
 

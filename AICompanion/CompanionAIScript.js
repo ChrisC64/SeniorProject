@@ -12,7 +12,7 @@ var v3TargetLook : Vector3;
 var qLastRotation : Quaternion;
 var fGapBetweenPlayer : float;
 
-var currentMoveSpeed:float = 2.0;
+var currentMoveSpeed:float = 4.0;
 
 //Variables for random movement when player is idle. 
 var fIdleTimer : float = 10.0;
@@ -72,7 +72,10 @@ function Update()
 	/////////////////////////////////////////////////////////////////////
 	if(goalDoor && currentCell!=playerCell)
 	{
-		 GoForDoor();
+		if(!currentCell.GetComponent(AIpathCellScript).wait)
+		{
+			GoForDoor();
+		}
 	}
 	
 	/////////////////////////////////////////////////////////////////////
@@ -137,7 +140,10 @@ function Update()
 			//If idle timer have yet to reach zero
 			/////////////////////////////////////////////////////////////////////
 			if(fIdleTimer>0)
-				GoForPlayer();
+			{
+				if(!currentCell.GetComponent(AIpathCellScript).wait)
+					GoForPlayer();
+			}
 		
 			/////////////////////////////////////////////////////////////////////
 			//If timer is up, companion will start to wander in current cell
@@ -159,7 +165,7 @@ function OnTriggerEnter (other :Collider)
 	if(other.tag == "AIpathCell")
 	{
 		currentCell = other.gameObject;
-		Debug.Log("Update arrTorches with torches from new cell");
+		//Debug.Log("Update arrTorches with torches from new cell");
 		arrTorches = other.GetComponent(AIpathCellScript).torches;
 		bTorchDetected = false;
 		if(currentCell.GetComponent(AIpathCellScript).bTorches)
@@ -236,24 +242,30 @@ function FindRandomSpotInCurCell()
 ///////////////////////////////////////////////////////////////////////////
 function GoForPlayer()
 {
-	playerTransform = GameObject.FindWithTag("Player").GetComponent(Transform);
+	playerTransform = GameObject.FindWithTag("PlayerPosition").GetComponent(Transform);
+	var playerDistance : float = Vector3.Distance(playerTransform.position, gameObject.transform.position);
 	
-		Debug.Log("Going for Player");
-		/////////////////////////////////////////////////////////////////////
-		//If distance between companion and player is greater than 5
-		/////////////////////////////////////////////////////////////////////
-		if(Vector3.Distance(transform.position, playerTransform.position) > fGapBetweenPlayer)
-		{
-			transform.position += (playerTransform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;
-			//transform.rotation = Quaternion.LookRotation(transform.position - v3LastPos);
-			//qLastRotation = transform.rotation;
-			FaceDirection(true);
-		}				
-		else 
-		{
-			//transform.rotation = qLastRotation;
-			FaceDirection(false);
-		}
+	if(playerDistance>10.0f)
+		currentMoveSpeed = 10.0f;
+	else
+		currentMoveSpeed = 4.0f;
+		
+	Debug.Log("Going for Player");
+	/////////////////////////////////////////////////////////////////////
+	//If distance between companion and player is greater than 5
+	/////////////////////////////////////////////////////////////////////
+	if(Vector3.Distance(transform.position, playerTransform.position) > fGapBetweenPlayer)
+	{
+		transform.position += (playerTransform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;
+		//transform.rotation = Quaternion.LookRotation(transform.position - v3LastPos);
+		//qLastRotation = transform.rotation;
+		FaceDirection(true);
+	}				
+	else 
+	{
+		//transform.rotation = qLastRotation;
+		FaceDirection(false);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -266,6 +278,14 @@ function GoForPlayer()
 function GoForDoor()
 {
 	Debug.Log("Going for Door");
+	
+	var playerDistance : float = Vector3.Distance(playerTransform.position, gameObject.transform.position);
+	
+	if(playerDistance>10.0f)
+		currentMoveSpeed = 10.0f;
+	else
+		currentMoveSpeed = 4.0f;
+	
 	transform.position += (goalDoor.transform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;	
 	FaceDirection(true);
 	//Reset idle timer
