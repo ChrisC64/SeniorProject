@@ -34,21 +34,6 @@ public class ActivateTrigger : MonoBehaviour {
 		
 		Debug.DrawRay(transform.position, Camera.mainCamera.transform.TransformDirection(Vector3.forward) * f_rayLength);
 		if(Physics.Raycast(transform.position, Camera.mainCamera.transform.TransformDirection(Vector3.forward), out hitInfo, f_rayLength)) {
-			/*if(hitInfo.collider.gameObject.tag == "Switch")	{
-				b_ObjectCollision = true;
-				Debug.Log("Hit object!");
-				if(Input.GetButtonDown ("Action"))	{
-					// Send message to switchTrigger and initiate "switch"
-					switchCollision = hitInfo.collider.gameObject;
-					switchCollision.SendMessage("TriggerSwitch");
-				}
-			}
-			else if(hitInfo.collider.gameObject.tag == "Trap") {
-				if(Input.GetButtonDown("Action")) {
-					switchCollision = hitInfo.collider.gameObject;
-					switchCollision.SendMessage("Activate");
-				}
-			}*/
 			
 			switch(hitInfo.collider.gameObject.tag.ToString()) {
 			case("Switch"):
