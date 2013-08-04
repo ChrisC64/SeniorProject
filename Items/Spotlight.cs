@@ -32,7 +32,7 @@ public class Spotlight : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Player.getSunGem()) {
+		if(Player.getSunGem() ) {
 			LightOn();
 			SunLight();
 		} else if(Player.getMoonGem() ) {
@@ -46,7 +46,6 @@ public class Spotlight : MonoBehaviour {
 		} else if (Player.getCanteen() ) {
 			LightOff ();
 		}	
-	
 	}
 	//these functions will be called to set each specific light's properties
 	//They are kept separate so that we can change each specific behavior if we need to; SpotAngle, intensity, color, etc. 
@@ -57,10 +56,7 @@ public class Spotlight : MonoBehaviour {
 		Spot.intensity = 1;
 		//Set color
 		Spot.color = Color.yellow;
-		//Spot.color.r = 239;
-		//Spot.color.g = 244;
-		//Spot.color.b = 65;
-		//Spot.color.a = 255;
+	
 	}
 	
 	void DarkLight() {
@@ -70,19 +66,17 @@ public class Spotlight : MonoBehaviour {
 		Spot.intensity = 1;
 		//Set color
 		Spot.color = Color.magenta;
-		//Spot.color.r = 167;
-		//Spot.color.g = 47;
-		//Spot.color.b = 132;
-		//Spot.color.a = 255;
+
 	}
 	
 	void FlashLight() {
 		//Set properties
-		Spot.spotAngle = 90;
+		Spot.spotAngle = 50;
 		Spot.range = 10;
-		Spot.intensity = 7.3f;
+		Spot.intensity = 1.15f;
 		//Set Color
-		Spot.color = Color.white;
+		Spot.color = new Color(0.58f, 0.48f, 0.03f, 1.0f);
+	
 	}
 	//Disable/Enable light
 	void LightOff() {
