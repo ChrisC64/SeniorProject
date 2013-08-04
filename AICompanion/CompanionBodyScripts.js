@@ -60,7 +60,7 @@ function Update () {
 		var hit : RaycastHit = hits[i];
 		if(hit.transform.gameObject == tParentToFollow.gameObject.GetComponent(CompanionAIScript).currentCell)
 		{
-			transform.position.y = hit.point.y+2.4f;	
+			transform.position.y = hit.point.y;	
 		}
 	}
 }
