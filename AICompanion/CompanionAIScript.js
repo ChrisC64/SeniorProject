@@ -14,6 +14,11 @@ var fGapBetweenPlayer : float;
 
 var currentMoveSpeed:float = 4.0;
 
+//Animation
+var walk : AnimationState;
+var idle : AnimationState;
+var companion : GameObject;
+
 //Variables for random movement when player is idle. 
 var fIdleTimer : float = 10.0;
 var fPause : float = 2.0;
@@ -39,8 +44,15 @@ function Awake()
 	fIdleTimer = 10.0f;
 	v3LastPos = transform.position;
 	fGapBetweenPlayer = 3.0f;
+	
 }
 
+function Start() 
+{
+	//walk = animation["Walk"];
+	//idle = animation["idle"];
+	companion = GameObject.FindWithTag("AnimModel");
+}
 function Update()
 {
 
@@ -55,7 +67,7 @@ function Update()
 	waitToStart--;	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	
+	//companion.animation.Play("Idle");
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Actualy movement script for the AI
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -72,10 +84,7 @@ function Update()
 	/////////////////////////////////////////////////////////////////////
 	if(goalDoor && currentCell!=playerCell)
 	{
-		if(!currentCell.GetComponent(AIpathCellScript).wait)
-		{
-			GoForDoor();
-		}
+		 GoForDoor();
 	}
 	
 	/////////////////////////////////////////////////////////////////////
@@ -140,10 +149,7 @@ function Update()
 			//If idle timer have yet to reach zero
 			/////////////////////////////////////////////////////////////////////
 			if(fIdleTimer>0)
-			{
-				if(!currentCell.GetComponent(AIpathCellScript).wait)
-					GoForPlayer();
-			}
+				GoForPlayer();
 		
 			/////////////////////////////////////////////////////////////////////
 			//If timer is up, companion will start to wander in current cell
@@ -165,7 +171,7 @@ function OnTriggerEnter (other :Collider)
 	if(other.tag == "AIpathCell")
 	{
 		currentCell = other.gameObject;
-		//Debug.Log("Update arrTorches with torches from new cell");
+		Debug.Log("Update arrTorches with torches from new cell");
 		arrTorches = other.GetComponent(AIpathCellScript).torches;
 		bTorchDetected = false;
 		if(currentCell.GetComponent(AIpathCellScript).bTorches)
@@ -194,6 +200,7 @@ function OnTriggerEnter (other :Collider)
 function WonderInCurCell()
 {
 	Debug.Log("Wondering");
+	companion.animation.Play("Walk");
 	/////////////////////////////////////////////////////////////////////
 	//Calculate new random position in current cell
 	/////////////////////////////////////////////////////////////////////
@@ -231,6 +238,7 @@ function FindRandomSpotInCurCell()
 	return currentCell.transform.position + (currentCell.transform.rotation * Vector3(Random.Range(
 	currentCell.transform.localScale.x * -0.5, currentCell.transform.localScale.x * 0.5), 0, Random.Range(
 	currentCell.transform.localScale.z * -0.5, currentCell.transform.localScale.z * 0.5)));
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -246,9 +254,15 @@ function GoForPlayer()
 	var playerDistance : float = Vector3.Distance(playerTransform.position, gameObject.transform.position);
 	
 	if(playerDistance>10.0f)
+	{
 		currentMoveSpeed = 10.0f;
+		companion.animation.Play("Walk");
+	}
 	else
+	{
 		currentMoveSpeed = 4.0f;
+		companion.animation.Play("Walk");
+	}
 		
 	Debug.Log("Going for Player");
 	/////////////////////////////////////////////////////////////////////
@@ -282,10 +296,15 @@ function GoForDoor()
 	var playerDistance : float = Vector3.Distance(playerTransform.position, gameObject.transform.position);
 	
 	if(playerDistance>10.0f)
+	{
 		currentMoveSpeed = 10.0f;
+		companion.animation.Play("Walk");
+	}
 	else
+	{
 		currentMoveSpeed = 4.0f;
-	
+		companion.animation.Play("Walk");
+	}
 	transform.position += (goalDoor.transform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;	
 	FaceDirection(true);
 	//Reset idle timer
