@@ -3,7 +3,7 @@
 //Variables 
 var playerTransform : Transform;
 var speed : float = 5.0f;
-var delayTime : float = 0.5f;
+var delayTime : float = 2.0f;
 var rotationSpeed : float = 0.0f; 
 var distance : float;
 var damage : int = 10;
@@ -39,7 +39,7 @@ function Update ()
 
 function RandomRise()
 {
-	transform.LookAt(transform.position+Vector3(Random.Range(-2,2),1,Random.Range(-2,2)));
+	transform.LookAt(transform.position+Vector3(Random.Range(-2.0f,2.0f),1,Random.Range(-2.0f,2.0f)));
 }
 
 function ActivateLight()

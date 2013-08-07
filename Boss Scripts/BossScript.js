@@ -3,11 +3,12 @@
 //Variables
 var whiteMissilePrefab : GameObject;
 var darkMissilePrefab : GameObject;
-var spawnTime : float = 5.0f;
-var spawnRate : float = 1.0f; 
+var spawnTime : float = 1.0f;
+var spawnRate : float = 5.0f; 
 var spiritMax : int = 5;
 var spiritCount : int = 0; 
-var canSpawn : boolean = true; 
+var canSpawn : boolean = true;
+var bossHealth : int = 5; 
 
 var STYLE : int = 0;
 
@@ -18,40 +19,41 @@ function Start ()
 }
 
 function Update () 
-{
-	spawnTime -= Time.deltaTime; 
-	
+{	 
+	if(bossHealth<=0)
+	{
+		Destroy(gameObject.Find("BossMesh").gameObject);
+	} 
 	if(spiritCount>=spiritMax)
 		canSpawn = false;
-	else if(spiritCount==0) 
+	else if(bossHealth>0) 
 	{
-		canSpawn = true;  
+		canSpawn = true;
+		spawnTime -= Time.deltaTime;  
 	}
 	
 	
 	//Will only spawn more once the previous wave is all gone
-	if(spiritCount<spiritMax && canSpawn)
+	if(canSpawn)
 	{
 		if(spawnTime <= 0)
-		{
-			spawnTime = spawnRate; 
+		{ 
+			spawnTime = spawnRate;
 				
 			switch(STYLE)
 			{
 			case 0: 
-				SpawnWave(5);
+				SpawnWave(spiritMax);
+				
 				break; 
-			case 1:
-				SpawnSpam();
+			case 1:	 
+				//Broken
+				SpawnSpam(spiritMax); 
 				break;
 	
 			
 			}
-//			for(var i:int=0; i<5; i++)
-//			{
-//			SpawnSpirits();
-//			spiritCount++; 
-//			}
+			
 			//Play audio clip 
 			audio.Play();
 		} 
@@ -76,35 +78,47 @@ function SpawnWave(num:int)
 		{ 
 			newMissile = Instantiate(whiteMissilePrefab, gameObject.transform.position+Vector3(0, 1, 0), transform.rotation); 
 			newMissile.SendMessage("RandomRise", SendMessageOptions.DontRequireReceiver); 
-			spiritCount++; 
+			//spiritCount++; 
 		}
 		else 
 		{
 			newMissile = Instantiate(darkMissilePrefab, gameObject.transform.position+Vector3(0, 1, 0), transform.rotation); 
 			newMissile.SendMessage("RandomRise", SendMessageOptions.DontRequireReceiver); 
-			spiritCount++; 
-		} 
-	}
+			//spiritCount++; 
+		}
+		spiritCount++;  
+	} 
 } 
 
-function SpawnSpam()
+function SpawnSpam(num:int)
 {
 	var rand : int;
 	var newMissile : GameObject; 
 	
-	rand = Random.Range(0,2);
-	if(rand==0) 
-	{ 
-		newMissile = Instantiate(whiteMissilePrefab, gameObject.transform.position+Vector3(0, 1, 0), transform.rotation); 
-		newMissile.SendMessage("RandomRise", SendMessageOptions.DontRequireReceiver);
-		spiritCount++;
-	}
-	else 
+	if(num>0)
 	{
-		newMissile = Instantiate(darkMissilePrefab, gameObject.transform.position+Vector3(0, 1, 0), transform.rotation); 
-		newMissile.SendMessage("RandomRise", SendMessageOptions.DontRequireReceiver);
-		spiritCount++;
-	}
+		rand = Random.Range(0,2);
+		if(rand==0) 
+		{ 
+			newMissile = Instantiate(whiteMissilePrefab, gameObject.transform.position+Vector3(0, 1, 0), transform.rotation); 
+			newMissile.SendMessage("RandomRise", SendMessageOptions.DontRequireReceiver);
+		}
+		else 
+		{
+			newMissile = Instantiate(darkMissilePrefab, gameObject.transform.position+Vector3(0, 1, 0), transform.rotation); 
+			newMissile.SendMessage("RandomRise", SendMessageOptions.DontRequireReceiver);
+		}
+		
+		spiritCount++; 
+		num--;
+	} 
+} 
+ 
+//For when the boss gets damaged. Increment difficulty. 
+function Hurt()
+{
+	spiritMax += 5; 
+	bossHealth--;
 }
 
 
