@@ -44,7 +44,6 @@ function Awake()
 	fIdleTimer = 10.0f;
 	v3LastPos = transform.position;
 	fGapBetweenPlayer = 3.0f;
-	
 }
 
 function Start() 
@@ -53,6 +52,7 @@ function Start()
 	//idle = animation["idle"];
 	companion = GameObject.FindWithTag("AnimModel");
 }
+
 function Update()
 {
 
@@ -67,7 +67,7 @@ function Update()
 	waitToStart--;	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	//companion.animation.Play("Idle");
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Actualy movement script for the AI
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -84,7 +84,10 @@ function Update()
 	/////////////////////////////////////////////////////////////////////
 	if(goalDoor && currentCell!=playerCell)
 	{
-		 GoForDoor();
+		if(!currentCell.GetComponent(AIpathCellScript).wait)
+		{
+			GoForDoor();
+		}
 	}
 	
 	/////////////////////////////////////////////////////////////////////
@@ -149,7 +152,10 @@ function Update()
 			//If idle timer have yet to reach zero
 			/////////////////////////////////////////////////////////////////////
 			if(fIdleTimer>0)
-				GoForPlayer();
+			{
+				if(!currentCell.GetComponent(AIpathCellScript).wait)
+					GoForPlayer();
+			}
 		
 			/////////////////////////////////////////////////////////////////////
 			//If timer is up, companion will start to wander in current cell
@@ -171,7 +177,7 @@ function OnTriggerEnter (other :Collider)
 	if(other.tag == "AIpathCell")
 	{
 		currentCell = other.gameObject;
-		Debug.Log("Update arrTorches with torches from new cell");
+		//Debug.Log("Update arrTorches with torches from new cell");
 		arrTorches = other.GetComponent(AIpathCellScript).torches;
 		bTorchDetected = false;
 		if(currentCell.GetComponent(AIpathCellScript).bTorches)
@@ -200,7 +206,6 @@ function OnTriggerEnter (other :Collider)
 function WonderInCurCell()
 {
 	Debug.Log("Wondering");
-	companion.animation.Play("Walk");
 	/////////////////////////////////////////////////////////////////////
 	//Calculate new random position in current cell
 	/////////////////////////////////////////////////////////////////////
@@ -238,7 +243,6 @@ function FindRandomSpotInCurCell()
 	return currentCell.transform.position + (currentCell.transform.rotation * Vector3(Random.Range(
 	currentCell.transform.localScale.x * -0.5, currentCell.transform.localScale.x * 0.5), 0, Random.Range(
 	currentCell.transform.localScale.z * -0.5, currentCell.transform.localScale.z * 0.5)));
-	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -254,15 +258,9 @@ function GoForPlayer()
 	var playerDistance : float = Vector3.Distance(playerTransform.position, gameObject.transform.position);
 	
 	if(playerDistance>10.0f)
-	{
 		currentMoveSpeed = 10.0f;
-		companion.animation.Play("Walk");
-	}
 	else
-	{
 		currentMoveSpeed = 4.0f;
-		companion.animation.Play("Walk");
-	}
 		
 	Debug.Log("Going for Player");
 	/////////////////////////////////////////////////////////////////////
@@ -296,15 +294,10 @@ function GoForDoor()
 	var playerDistance : float = Vector3.Distance(playerTransform.position, gameObject.transform.position);
 	
 	if(playerDistance>10.0f)
-	{
 		currentMoveSpeed = 10.0f;
-		companion.animation.Play("Walk");
-	}
 	else
-	{
 		currentMoveSpeed = 4.0f;
-		companion.animation.Play("Walk");
-	}
+	
 	transform.position += (goalDoor.transform.position - transform.position).normalized * currentMoveSpeed * Time.deltaTime;	
 	FaceDirection(true);
 	//Reset idle timer
@@ -343,7 +336,8 @@ function CalcPathToPlayer()
 //////////////////////////////////////////////////////////////////////////
 //Name: FaceDirection
 //Use: 	Called to change the rotation of the mesh to match the direction
-//		it is moving to. 
+//		it is moving to. This also controls what animation to play during 
+//		movement and idle state. 
 //Para: Call the function with true if the object is in motion. False when 
 //		object needs to keep to face the last direction it is facing.
 ///////////////////////////////////////////////////////////////////////////
@@ -353,10 +347,12 @@ function FaceDirection(bIsMoving : boolean)
 	{
 		transform.rotation = Quaternion.LookRotation(transform.position - v3LastPos);
 		qLastRotation = transform.rotation;
+		companion.animation.Play("Walk");
 	}
 	else
 	{
 		transform.rotation = qLastRotation;
+		companion.animation.Play("Idle");
 	}
 }
 
