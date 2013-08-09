@@ -16,8 +16,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerStates : MonoBehaviour {
-
+public class PlayerStates : MonoBehaviour 
+{
 	/****************************
 	 * BEGIN VARIABLE DECLARATION
 	 * ***************************/
@@ -45,19 +45,25 @@ public class PlayerStates : MonoBehaviour {
 	public bool b_Canteen;
 	public bool b_SunGem;
 	public bool b_MoonGem;
+	
+	//Items Unlocked
+	public bool b_SunGemUnlock;
+	public bool b_MoonGemUnlock;
+	private int sunGemUnlock;
+	private int moonGemUnlock;
 
 	//Vector3
 	private Vector3 playerPos;
 	
 
 	// Class objects
-	public hpBarScript hpHUD;
 	PlayerEnum currentState;
 	SaveSystem saveManager;
 	GameObject playerObj;
 
 	// CLASS CONSTRUCTOR
-	public PlayerStates() {
+	public PlayerStates() 
+	{
 		//Player variables
 		f_MaxHP = 100.0f;
 		f_currentHP = f_MaxHP;
@@ -76,7 +82,8 @@ public class PlayerStates : MonoBehaviour {
 
 	}
 
-	void Awake() {
+	void Awake()
+	{
 		//Get State
 		currentState = PlayerEnum.GAME;
 		saveManager = GameObject.Find("GameManager").GetComponent<SaveSystem>();
@@ -85,7 +92,8 @@ public class PlayerStates : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		b_IsAlive = true;
 		b_InMenu = false;
 		playerPos = gameObject.transform.position;;
@@ -96,22 +104,22 @@ public class PlayerStates : MonoBehaviour {
 	 * *************************/
 
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
+		#region UPDATE
 		playerPos = gameObject.transform.position;
 		switch(currentState) 
 		{
 			case(PlayerEnum.GAME):
 				// GAME State
 				#region GAME
-					if(f_currentHP <= 0)
-					{
-						currentState = PlayerEnum.DEAD;
-					}
-					Debug.Log ("currentState: " + currentState.ToString());
-					//mouse.SendMessage("LockMouse");
-					playerInput();
-						//Display GUI HUD for Gameplay
-						//Hide and Lock mouse (display cursor for game)
+				if(f_currentHP <= 0)
+				{
+					currentState = PlayerEnum.DEAD;
+				}
+				Debug.Log ("currentState: " + currentState.ToString());
+				//mouse.SendMessage("LockMouse");
+				playerInput();
 				break;
 				#endregion GAME
 			case(PlayerEnum.MENU): 	// MENU State
@@ -119,6 +127,10 @@ public class PlayerStates : MonoBehaviour {
 				Debug.Log ("currentState: " + currentState.ToString ());
 				//Unlock mouse
 				//Display Menu
+				if(!b_InMenu)
+				{
+					currentState = PlayerEnum.GAME;
+				}
 				//Player Input for Menu controls
 				break;
 				#endregion MENU
@@ -151,12 +163,13 @@ public class PlayerStates : MonoBehaviour {
 				#region DEFAULT
 				Debug.Log ("Error! Invalid State!");
 				//Load Retry/EndGame Menu options
-			
 				break;
 				#endregion DEFAULT
 		} // End of Switch
+		#endregion UPDATE
 	} // End of Update
-
+	
+	#region GET METHODS
 	//return methods used for our GameState Manager to retrieve when needed
 	public bool getIsAlive() {return b_IsAlive;}
 	public bool getInMenu() {return b_InMenu;}
@@ -164,6 +177,8 @@ public class PlayerStates : MonoBehaviour {
 	public bool getCanteen() {return b_Canteen;}
 	public bool getSunGem() {return b_SunGem;}
 	public bool getMoonGem() {return b_MoonGem;}
+	public bool getUnlockSun() {return b_SunGemUnlock;}
+	public bool getUnlockMoon() {return b_MoonGemUnlock;}
 	public float getMaxHP() {return f_MaxHP;}
 	public float getCurrHP() {return f_currentHP;}
 	public Vector3 getPlayerPos() {return playerPos;}
@@ -171,7 +186,10 @@ public class PlayerStates : MonoBehaviour {
 	public float getPlayerPosY() {return playerPos.y;}
 	public float getPlayerPosZ() {return playerPos.z;}
 	public int getCanteenUses() {return i_CurrUse;}
-
+	public int getMoon() {return moonGemUnlock;}
+	public int getSun() {return sunGemUnlock;}
+	#endregion GET METHODS
+	#region SET METHODS
 	//set methods to set variables (if called from another class, like GameManager)
 	public void setIsAlive(bool alive) {b_IsAlive = alive;}
 	public void setInMenu (bool menu) {b_InMenu = menu;}
@@ -181,59 +199,143 @@ public class PlayerStates : MonoBehaviour {
 	public void setPlayerPos(Vector3 pos) {playerPos = pos;}
 	public void setPlayerPos (float x, float y, float z) {playerPos = new Vector3(x, y, z);}
 	public void setPlayerObjPos () {playerObj.transform.position = playerPos;}
-
+	public void setUnlockSun(int sun) 
+	{ 
+		switch(sun) 
+		{
+		case(0):
+			b_SunGemUnlock = false;
+			sunGemUnlock = 0;
+			break;
+		case(1):
+			b_SunGemUnlock = true;
+			sunGemUnlock = 1;
+			break;
+		default:
+			b_SunGemUnlock = true;
+			sunGemUnlock = 1;
+			break;
+		}
+	}
+	public void setUnlockMoon(int moon) 
+	{
+		switch(moon)
+		{
+		case(0):
+			b_MoonGemUnlock = false;
+			moonGemUnlock = 0;
+			break;
+		case(1):
+			b_MoonGemUnlock = true;
+			moonGemUnlock = 1;
+			break;
+		default:
+			b_MoonGemUnlock = true;
+			moonGemUnlock = 1;
+			break;
+		}
+	}
+	#endregion SET METHODS
 	//Functions
+	
 	public void takeDamage(float damage) {f_currentHP = f_currentHP - damage;}
-	public float heal() {return f_currentHP += f_currentHP + 50.0f > f_MaxHP ?
-		f_HealAmount = f_MaxHP - f_currentHP : (f_HealAmount < 50.0f ? f_HealAmount = 50.0f : f_HealAmount = 50.0f);}
+	public float heal() 
+	{
+		return f_currentHP += f_currentHP + 50.0f > f_MaxHP ? f_HealAmount = f_MaxHP - f_currentHP : (f_HealAmount < 50.0f ? f_HealAmount = 50.0f : f_HealAmount = 50.0f);
+	}
 
-	private void playerInput() {
+	private void playerInput() 
+	{
 		//Player Input when playing game
-		if(Input.GetButtonDown("Map")) {
+		if(Input.GetButtonDown("Map"))
+		{
 			Debug.Log("Opening Map");
 			currentState = PlayerEnum.MAP; // Open map
 		}
-		if(Input.GetKeyDown("h") && f_currentHP < f_MaxHP) {
+		if(Input.GetKeyDown("h") && f_currentHP < f_MaxHP && i_CurrUse != 0) 
+		{
 			heal ();
+			i_CurrUse--;
 		}
-		if(Input.GetKeyDown ("j") && f_currentHP >= 0) {
+		/*if(Input.GetKeyDown ("j") && f_currentHP >= 0) {
 			takeDamage(10);
 			//If player's health is 0, switch states
-		}
-		if(Input.GetKeyDown ("1")) {
+		}*/
+		if(Input.GetKeyDown ("1"))
+		{
 			//set equipped item to flashlight to true
 			b_Flashlight = true;
 			b_Canteen = false;
 			b_SunGem = false;
 			b_MoonGem = false;
-			Debug.Log ("Equipped Flashlight");
 		}
-		if(Input.GetKeyDown ("2")) {
+		if(Input.GetKeyDown ("2")) 
+		{
 			//set equipped item to canteen
 			b_Flashlight = false;
 			b_Canteen = true;
 			b_SunGem = false;
 			b_MoonGem = false;
-			Debug.Log ("Equipped Canteen");
 		}
-		if(Input.GetKeyDown("3")) {
+		if(Input.GetKeyDown("3") &&  b_SunGemUnlock) 
+		{
 			//set equipped item to sun gemstone
 			b_Flashlight = false;
 			b_Canteen = false;
 			b_SunGem = true;
 			b_MoonGem = false;
-			Debug.Log ("Equipped Sun Gem");
 		}
-		if(Input.GetKeyDown("4")) {
+		if(Input.GetKeyDown("4") && b_MoonGemUnlock)
+		{
 			//set equipped item to moon gemstone
 			b_Flashlight = false;
 			b_Canteen = false;
 			b_SunGem = false;
 			b_MoonGem = true;
-			Debug.Log ("Equipped Moon Gem");
 		}
-		if(Input.GetKeyDown("l")) {
-			playerPos = new Vector3(0, 0, 0);	
+		if(Input.GetButtonDown("Menu")) 
+		{
+			if(b_InMenu) 
+			{
+				b_InMenu = false;
+				currentState = PlayerEnum.GAME;
+			}
+			else if(!b_InMenu) 
+			{
+				b_InMenu = true;
+				currentState = PlayerEnum.MENU;
+			}
 		}
 	}
+	
+	public void equipItem(int item) 
+	{
+		switch(item) 
+		{
+		case(0):
+			b_Flashlight = true;
+			b_Canteen = false;
+			b_SunGem = false;
+			b_MoonGem = false;
+			break;
+		case(1):
+			b_Flashlight = false;
+			b_Canteen = true;
+			b_SunGem = false;
+			b_MoonGem = false;
+			break;
+		case(2):
+			b_Flashlight = false;
+			b_Canteen = false;
+			b_SunGem = true;
+			b_MoonGem = false;
+			break;
+		case(3):
+			b_Flashlight = false;
+			b_Canteen = false;
+			b_SunGem = false;
+			b_MoonGem = true;
+			break;
+		}
+	} 
 }
