@@ -10,7 +10,7 @@ var shortestPathSoFar : float;
 var v3LastPos : Vector3;
 var v3TargetLook : Vector3;
 var qLastRotation : Quaternion;
-var fGapBetweenPlayer : float;
+var fGapBetweenPlayer : float; 
 
 var currentMoveSpeed:float = 4.0;
 
@@ -32,14 +32,12 @@ var gaNearestTorch : GameObject;
 var fGapBetweenTorch : float = 1.0f;
 
 @HideInInspector	
-var waitToStart : int = 5;
 
 function Awake()
 {
 	shortestPathSoFar = Mathf.Infinity;
 	playerMovementScript = GameObject.FindWithTag("PlayerPosition").GetComponent(PlayerMovementScript);
 	playerTransform = GameObject.FindWithTag("PlayerPosition").transform;
-	waitToStart = 5;
 	v3RandomizedCourse = transform.position;
 	fIdleTimer = 10.0f;
 	v3LastPos = transform.position;
@@ -58,13 +56,8 @@ function Update()
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Goes through the cells and doors to determine shortest path to player
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if(waitToStart<=0)
-	{
-		CalcPathToPlayer();
-	}
-	
-	waitToStart--;	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+	CalcPathToPlayer();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
@@ -85,8 +78,8 @@ function Update()
 	if(goalDoor && currentCell!=playerCell)
 	{
 		if(!currentCell.GetComponent(AIpathCellScript).wait)
-		{
-			GoForDoor();
+		{ 
+			GoForDoor(); 
 		}
 	}
 	
@@ -191,8 +184,7 @@ function OnTriggerEnter (other :Collider)
 					gaNearestTorch = torch;
 				}
 			}
-		}
-			
+		}	
 	}
 }
  
