@@ -3,14 +3,17 @@
 //Variables 
 var playerTransform : Transform;
 var speed : float = 5.0f;
-var delayTime : float = 2.0f;
+var delayTime : float = 0.5f;
 var rotationSpeed : float = 0.0f; 
 var distance : float;
 var damage : int = 10;
+var bossScript : BossScript;
 
 function Start () 
 {
 	playerTransform = GameObject.FindGameObjectWithTag("MainCamera").transform; 
+	transform.LookAt(transform.position+Vector3(0,1,0));
+	bossScript = GameObject.FindWithTag("Boss").GetComponent(BossScript);
 }
 
 function Update () 
@@ -32,32 +35,17 @@ function Update ()
 	if(distance < 1)
 	{
 		GameObject.FindGameObjectWithTag("Player").SendMessage("takeDamage", damage, SendMessageOptions.DontRequireReceiver);
-		GameObject.FindGameObjectWithTag("Boss").SendMessage("SubtractSpirit", SendMessageOptions.DontRequireReceiver);
-		Destroy(gameObject); 
+		ActivateLight(); 
 	}
-}
-
-function RandomRise()
-{
-	transform.LookAt(transform.position+Vector3(Random.Range(-2.0f,2.0f),1,Random.Range(-2.0f,2.0f)));
 }
 
 function ActivateLight()
 {	
-	GameObject.FindGameObjectWithTag("Boss").SendMessage("SubtractSpirit", SendMessageOptions.DontRequireReceiver);
 	Destroy(gameObject);
+	bossScript.SubtractSpirit();
 }
 
-function ActivateDark()
+function ActivateDark() 
 {
-	
-}
-
-
-//function OnTriggerEnter(other : Collider)
-//{
-//	if(other.tag == "Player")
-//	{
-//		Destroy(gameObject);
-//	}
-//}
+	//Do nothing when hit by the same light
+ }
