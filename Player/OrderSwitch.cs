@@ -15,15 +15,17 @@ public class OrderSwitch : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if(bNoMoreFlips)
+		if(!bNoMoreFlips)
 		{
 			if(bIsOn)
 			{
 				this.renderer.material.color = Color.white;	
+				this.light.enabled = true;
 			}
 			else if(!bIsOn)
 			{
 				this.renderer.material.color = Color.white;
+				this.light.enabled = false;
 			}
 		}
 	}
@@ -44,7 +46,7 @@ public class OrderSwitch : MonoBehaviour {
 	void Reset() 
 	{
 		bIsOn = false;
-		
+		this.light.enabled = false;
 	}
 	
 	void StopFlips()
