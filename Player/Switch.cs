@@ -6,21 +6,30 @@ public class Switch : MonoBehaviour {
 	public float targetTime = 2.0f;
 	public List<GameObject> connectedObjects = new List<GameObject>();
 	public bool bIsInvisible;
+	public bool bSwitchOnce; //If true, will only be able to switch once
+	private bool bCanSwitch; //Condition check for insuring we only switch once
 	//public GameObject switchObject;
 	//private float fCurrentTime = Time.deltaTime;
 	// Use this for initialization
-	void Start () {
-		if(bIsSwitchedOn) {
-			this.renderer.material.color = Color.green;	
+	void Start ()
+	{
+		
+		if(bIsSwitchedOn) 
+		{	
+			this.light.enabled = true;
 		}
-		else if(!bIsSwitchedOn) {
-			this.renderer.material.color = Color.red;
+		else if(!bIsSwitchedOn) 
+		{
+			this.light.enabled = false;
 		}
-		if(bIsInvisible) {
+		if(bIsInvisible) 
+		{
 			//8 = invisible layer (doesn't appear on camera) and 9 = trigger
 			this.gameObject.layer = 8;
 			this.gameObject.collider.isTrigger = true;
+			Debug.Log("Goodbye!");
 		}
+		bCanSwitch = true;
 	}
 	
 	// Update is called once per frame
@@ -28,26 +37,53 @@ public class Switch : MonoBehaviour {
 		
 	}
 	
-	void TriggerSwitch() {
-		//Toggle state of switch
-		if(bIsSwitchedOn)
+	void TriggerSwitch() 
+	{
+		if(bCanSwitch) 
 		{
-			Debug.Log ("Switch OFF!");
-			bIsSwitchedOn = false;
-			this.renderer.material.color = Color.red;
-		}//Else if the switch if false AND the time passed is greater than targetTime, switch On
-		else if(!bIsSwitchedOn)
-		{
-			Debug.Log ("Switch ON");
-			bIsSwitchedOn = true;
-			this.renderer.material.color = Color.green;
+			//Toggle state of switch
+			if(bIsSwitchedOn)
+			{
+				Debug.Log ("Switch OFF!");
+				bIsSwitchedOn = false;
+				this.light.enabled = false;
+			}//Else if the switch is false AND the time passed is greater than targetTime, switch On
+			else if(!bIsSwitchedOn)
+			{
+				Debug.Log ("Switch ON");
+				bIsSwitchedOn = true;
+				this.light.enabled = true;
+			}
+			//Loop through contents and send message to connected objects
+			int count = 0;
+		switch(this.tag)
+			{
+			case("Door"):
+				foreach(GameObject objects in connectedObjects)
+				{
+					connectedObjects[count].SendMessage("OpenDoor");
+					count++;
+				}
+			break;
+			case("MoveSwitch"):
+			foreach(GameObject objects in connectedObjects)
+			{
+				connectedObjects[count].SendMessage("OpenDoor");
+				count++;
+			}
+			break;
+			default:
+				foreach(GameObject objects in connectedObjects)
+				{
+					connectedObjects[count].SendMessage("Activate");
+					count++;
+				}
+				break;
+			}
 		}
-		//Loop through contents and send message to connected objects
-		int count = 0;
-		foreach(GameObject objects in connectedObjects)
+		if(bSwitchOnce)
 		{
-			connectedObjects[count].SendMessage("Activate");
-			count++;
+			bCanSwitch = false;
 		}
 	} // End TriggerSwitch
 	
@@ -55,19 +91,24 @@ public class Switch : MonoBehaviour {
 	
 	public void SetIsSwtichedOn (bool setSwitch ) { bIsSwitchedOn = setSwitch; }
 	
-	public void Activate() {
-		if(bIsInvisible) {
+	public void Activate() 
+	{
+		if(bIsInvisible)
+		{
 			//disappear object and make a trigger to avoide collsion
 			//8 = invisible layer (doesn't appear on camera) and 9 = trigger
 			bIsInvisible = false;
 			this.gameObject.layer = 9;
 			this.gameObject.collider.isTrigger = false;
+			this.light.enabled = false;
 		}
-		else if (!bIsInvisible) {
+		else if (!bIsInvisible)
+		{
 			//reappear object and set collision back on
 			bIsInvisible = true;
 			this.gameObject.layer = 8;
 			this.gameObject.collider.isTrigger = true;
+			this.light.enabled = false;
 		}
 	}
 }
